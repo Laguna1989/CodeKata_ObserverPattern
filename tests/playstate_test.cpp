@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "playstate.hpp"
+#include <gtest/gtest.h>
 
 TEST(PlaystateTest, RenderInitial)
 {
@@ -11,24 +11,31 @@ TEST(PlaystateTest, RenderInitial)
 
 TEST(PlaystateTest, GameIsOverAfterPlayerDeath)
 {
-    // Smort Dependency Injection
     auto p = std::make_shared<Player>(nullptr);
-    Playstate ps{p};
+    Playstate ps { p };
 
     p->take_damage(100);
     ps.update();
     ASSERT_TRUE(ps.is_game_over());
 }
 
-
 TEST(PlaystateTest, RenderHealthWithCustomPlayer)
 {
-    // Smort Dependency Injection
-    auto p = std::make_shared<Player>(nullptr);
-    Playstate ps{p};
+    auto h = std::make_shared<Hud>();
+    auto p = std::make_shared<Player>(h);
+    Playstate ps { p, h };
     p->take_damage(5);
     ps.update();
     ASSERT_EQ("Score: 0\n95 / 100", ps.render());
 }
 
-// TODO How to test render after score point? :/
+TEST(PlaystateTest, GameOverAfterReach100Points)
+{
+    auto h = std::make_shared<Hud>();
+    auto p = std::make_shared<Player>(h);
+    Playstate ps { p, h };
+    for (int i = 0; i != 100; ++i) {
+        p->score_point();
+    }
+    ASSERT_TRUE(ps.is_game_over());
+}

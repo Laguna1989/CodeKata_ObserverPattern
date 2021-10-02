@@ -1,6 +1,7 @@
 #ifndef CODEKATA_OBSERVERPATTERN_PLAYER_HPP
 #define CODEKATA_OBSERVERPATTERN_PLAYER_HPP
 
+#include "observable.hpp"
 #include <memory>
 
 class Hud;
@@ -15,13 +16,13 @@ public:
     void take_damage(int value);
     void score_point();
 
+    void set_score_observer(std::shared_ptr<ObserverInterface> o);
+
 private:
-    int m_health_max{100};
-    int m_health{m_health_max};
+    Observable m_health_max { 100 };
+    Observable m_health { m_health_max };
 
-    int m_score{0};
-
-    std::shared_ptr<Hud> m_hud;
+    Observable m_score { 0 };
 };
 
 #endif // CODEKATA_OBSERVERPATTERN_PLAYER_HPP

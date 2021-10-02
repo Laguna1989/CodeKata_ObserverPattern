@@ -3,11 +3,12 @@
 
 #include "hud.hpp"
 #include "player.hpp"
+#include "score_observer.hpp"
 #include <memory>
 
 class Playstate {
 public:
-    Playstate(std::shared_ptr<Player> player = nullptr);
+    Playstate(std::shared_ptr<Player> player = nullptr, std::shared_ptr<Hud> hud = nullptr);
 
     void update();
 
@@ -19,8 +20,9 @@ private:
     std::shared_ptr<Hud> m_hud;
     std::shared_ptr<Player> m_player;
 
-    bool m_is_game_over{false};
+    std::shared_ptr<ScoreObserver> m_scoreObserver;
 
+    bool m_is_game_over { false };
 };
 
 #endif // CODEKATA_OBSERVERPATTERN_PLAYSTATE_HPP

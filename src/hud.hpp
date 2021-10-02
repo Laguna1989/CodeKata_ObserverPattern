@@ -1,21 +1,29 @@
 #ifndef CODEKATA_OBSERVERPATTERN_HUD_HPP
 #define CODEKATA_OBSERVERPATTERN_HUD_HPP
 
+#include "observer.hpp"
+#include <memory>
 #include <string>
 
 class Hud {
 public:
-    void set_score_text(std::string const& new_text);
+    Hud();
     std::string render_score_text();
-
-    void set_player_health_current(int health_current);
-    void set_player_health_max(int health_max);
     std::string render_player_health_text();
-private:
-    std::string m_score_text{"Score: 0"};
 
-    int m_player_health_current{0};
-    int m_player_health_max{0};
+    std::shared_ptr<ObserverInterface> get_observer_score();
+    std::shared_ptr<ObserverInterface> get_observer_player_health_current();
+    std::shared_ptr<ObserverInterface> get_observer_player_health_max();
+
+private:
+    std::string m_score_text { "Score: 0" };
+    std::shared_ptr<Observer> m_score_observer;
+
+    std::string m_player_health_current_text { "100" };
+    std::shared_ptr<Observer> m_player_health_current_observer;
+
+    std::string m_player_health_max_text { " / 100" };
+    std::shared_ptr<Observer> m_player_health_max_observer;
 };
 
 #endif // CODEKATA_OBSERVERPATTERN_HUD_HPP
