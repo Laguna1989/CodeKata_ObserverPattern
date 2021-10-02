@@ -52,9 +52,29 @@ Add the respective observer interfaces and classes, but do not use them yet in t
 
 Of course this should be done using TDD, creating tests first.
 
+* Start by creating an interface `ObserverInterface`. It should have one function `void notify(int newValue)`
+    * **Note** the `notify` function will take an `int` because this is all that is needed in this example. This can be
+      expanded to a generic interface using a template type later on, if required.
+* Create an `Observable` class. This class contains 0 to N subscribers, e.g. in a vector of (smart-) pointers
+  to `ObserverInterface`.
+    * The `Observable` class should behave like a normal integer, wrt arithmetics. For this Kata you will need
+        * `operator int() const;` implicit conversion to int
+        * `Observable& operator=(int value);` assignment operator
+        * `Observable operator++(int);` post increment operator
+        * `Observable& operator-=(int value);` assign decrement operator
+    * Whenever the value changes, all current subscribers need to be notified.
+* Create an `Observer` class.
+    * This class derives from `ObserverInterface`.
+    * For the purpose of this Kata the constructor could look like
+      this: `Observer(std::string& display_string, std::string prefix = "");`
+
 ## 3. Adjust the existing implementation to use the Observer pattern
 
-Now it is time to get your hands dirty. Put the newly added observer functionality into action.
+Now it is time to put the newly added observer functionality into action.
+
+* First, replace the Player member variable `int m_score` with the newly created `Observable` type. Verify that all
+  tests still pass.
+* Add a member to the `Hud` class: `std::shared_ptr<Observer> m_score_observer;` and add a public getter.
 
 * Do you like the new design better or worse?
 * Has the code improved? In which areas?
@@ -65,4 +85,6 @@ Now it is time to get your hands dirty. Put the newly added observer functionali
 Now it is time to expand the actual game functionality and introduce new features.
 
 The `Playstate` class already checks for the player health reaching zero. Let's add another game over condition when the
-score reaches 100. In this case, now two observers are watching the same variable.  
+score reaches 100. In this case, now two observers are watching the same variable.
+
+Create a new class which derives from `ObserverInterface` to do this. 
